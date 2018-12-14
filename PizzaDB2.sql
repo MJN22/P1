@@ -1,7 +1,8 @@
-create database PizzaDB2
-Go
-Create schema PizzaDB2
-Go
+create Database pizzaDB
+go
+create schema pizzaDB
+go
+
 
 --drop table UserTBL
 CREATE TABLE UserTBL
@@ -11,6 +12,7 @@ CREATE TABLE UserTBL
 ,
   LastName NVARCHAR(108) NOT NULL
   ,
+  --User
 );
 go
 --drop table UserAddress 
@@ -31,8 +33,8 @@ CREATE TABLE Orders
 (
   UserOrderAddressID int not null,
   StoreAddressID int not null,
-  ID int identity Primary key NOT NULL,
-
+  ID int  NOT NULL, --make this foreign key to orderdetail
+  
 );
 GO
 
@@ -64,30 +66,32 @@ CREATE TABLE StoreIngredients
   ID INT PRIMARY KEY IDENTITY NOT NULL,
   --IngredientsName NVARCHAR(300) NOT NULL,
   IngredientStock INT,
+  Quantity int,
   --uncommented this for compiling issues need to fix db
 );
 GO
-
-CREATE TABLE OrderedPizzas
+--drop Table OrderDetails
+CREATE TABLE OrderDetails
 (
-  id INT PRIMARY KEY IDENTITY not null,
-  OrderID int not null,
+  id INT  not null,
+  OrderID int Primary Key Identity(1,1) not null,
   PizzaID int not null,
 
 )
-GO
+go
 
 CREATE TABLE Pizza
 (
   ID int PRIMARY KEY IDENTITY,
   PizzaName NVARCHAR(500) NOT NULL,
   Costs MONEY not null,
+  Quantity int, 
 );
 GO
 
 CREATE TABLE PizzaIngredients
 (
-  ID INT IDENTITY PRIMARY KEY,
+  ID INT IDENTITY(1,1),
   PizzaID INT NOT NULL,
   IngredientName NVARCHAR(108) NOT NULL,
   IngredientCost INT NOT NULL,
@@ -96,6 +100,16 @@ CREATE TABLE PizzaIngredients
 GO
 
 ------------ADDDING CONSTRAINTSSSSS -------------
+
+Alter table PizzaIngredients
+add constraint Fk_PizzaID
+foreign key (PizzaID)
+References Pizza(ID)
+
+alter table OrderDetails
+Add constraint FK_OrderID
+Foreign key (OrderID)
+References Orders(ID)
 
 ALTER TABLE PizzaIngredients
 ADD CONSTRAINT FK_PizzaID
@@ -108,7 +122,8 @@ ADD CONSTRAINT FK_UserAddressID
 FOREIGN KEY (UserAddressID) 
 REFERENCES UserTBL(UserID);
 GO
-
+---- going to re do  relationship between orders
+--orderdetails and possibly store
 ALTER TABLE Orders
 ADD CONSTRAINT FK_UserOrderAddressID
 FOREIGN KEY (UserOrderAddressID) 
@@ -121,13 +136,13 @@ FOREIGN KEY ( StoreAddressID )
 REFERENCES Store(StoreAddressID);
 GO
 
-ALTER TABLE OrderedPizzas
+ALTER TABLE OrderDetails
 ADD CONSTRAINT FK_OrderID
 FOREIGN KEY ( OrderID )
 REFERENCES Orders(ID);
 GO
 
-ALTER TABLE OrderedPizzas
+ALTER TABLE OrderDetails
 ADD CONSTRAINT FK_OrderPizzaID
 FOREIGN KEY ( PizzaID )
 REFERENCES Pizza(ID);
@@ -202,7 +217,7 @@ INSERT INTO PizzaIngredients
 (PizzaID, IngredientName, IngredientCost)
 VALUES ( (select ID FROM Pizza Where ID =3),(select PizzaName FROM Pizza Where ID =3) , 3)
 
-
+i
 
 --SELECT *FROM PizzaIngredients 
 --SELECT * FROM UserAddress
@@ -210,7 +225,7 @@ VALUES ( (select ID FROM Pizza Where ID =3),(select PizzaName FROM Pizza Where I
 --SELECT * From Store
 --select * from StoreIngredients
 --select * from Orders
---select * from OrderedPizzas
+--select * from OrderDetails
 ------insert into store ignreds---
 INSERT INTO StoreIngredients( StoreIngredientsAddressID, IngredientStock)
 Values((Select StoreAddressID from Store),250)
@@ -222,5 +237,14 @@ INSERT INTO Orders(UserOrderAddressID, StoreAddressID) VALUES
 --will get back to this if i can
 
 --select * from Orders
---select * from OrderedPizzas
+--select * from OrderDetails
 
+Alter table Orders
+add constraint FK_ID
+foreign key (ID)
+References OrderDetails(OrderID)
+
+Alter table OrderDetails
+add constraint FK_PizzaIDOrderDetails
+foreign key (ID)
+References Pizza(ID)
