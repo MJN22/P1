@@ -267,3 +267,6 @@ Alter table OrderDetails
 add constraint FK_PizzaIDOrderDetails
 foreign key (ID)
 References Pizza(ID)
+
+alter table Orders
+add _orderId int Primary Key identity(1,1);
