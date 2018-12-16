@@ -33,8 +33,9 @@ CREATE TABLE Orders
 (
   UserOrderAddressID int not null,
   StoreAddressID int not null,
-  ID int  NOT NULL, --make this foreign key to orderdetail
-  
+  ID int NOT NULL,
+  --make this foreign key to orderdetail
+
 );
 GO
 
@@ -73,7 +74,7 @@ GO
 --drop Table OrderDetails
 CREATE TABLE OrderDetails
 (
-  id INT  not null,
+  id INT not null,
   OrderID int Primary Key Identity(1,1) not null,
   PizzaID int not null,
 
@@ -85,13 +86,13 @@ CREATE TABLE Pizza
   ID int PRIMARY KEY IDENTITY,
   PizzaName NVARCHAR(500) NOT NULL,
   Costs MONEY not null,
-  Quantity int, 
+  Quantity int,
 );
 GO
 
 CREATE TABLE PizzaIngredients
 (
-  ID INT IDENTITY(1,1),
+  ID INT Primary Key IDENTITY(1,1),--add primary key on to identity field see if this helps scaffold
   PizzaID INT NOT NULL,
   IngredientName NVARCHAR(108) NOT NULL,
   IngredientCost INT NOT NULL,
@@ -111,11 +112,11 @@ Add constraint FK_OrderID
 Foreign key (OrderID)
 References Orders(ID)
 
-ALTER TABLE PizzaIngredients
-ADD CONSTRAINT FK_PizzaID
-FOREIGN KEY (PizzaID) 
-REFERENCES Pizza(ID);
-GO
+-- ALTER TABLE PizzaIngredients
+-- ADD CONSTRAINT FK_PizzaID
+-- FOREIGN KEY (PizzaID) 
+-- REFERENCES Pizza(ID);
+-- GO
 
 ALTER TABLE UserAddress
 ADD CONSTRAINT FK_UserAddressID
@@ -196,7 +197,7 @@ INSERT INTO Pizza
   ( PizzaName, Costs)
 VALUES
   ('ExtraCheesy', 12.00)
- INSERT INTO Pizza
+INSERT INTO Pizza
   ( PizzaName, Costs)
 VALUES
   ('Meats', 15.00)
@@ -207,17 +208,29 @@ FROM Pizza
 INSERT INTO PizzaIngredients
   (PizzaID, IngredientName, IngredientCost)
 VALUES
-  ( (select ID FROM Pizza Where ID =1), 'Cheese', 1)
+  ( (select ID
+    FROM Pizza
+    Where ID =1), 'Cheese', 1)
 
 INSERT INTO PizzaIngredients
-(PizzaID, IngredientName, IngredientCost)
-VALUES ( (select ID FROM Pizza Where ID =2),(select PizzaName FROM Pizza Where ID =2) , 2)
+  (PizzaID, IngredientName, IngredientCost)
+VALUES
+  ( (select ID
+    FROM Pizza
+    Where ID =2), (select PizzaName
+    FROM Pizza
+    Where ID =2) , 2)
 
 INSERT INTO PizzaIngredients
-(PizzaID, IngredientName, IngredientCost)
-VALUES ( (select ID FROM Pizza Where ID =3),(select PizzaName FROM Pizza Where ID =3) , 3)
+  (PizzaID, IngredientName, IngredientCost)
+VALUES
+  ( (select ID
+    FROM Pizza
+    Where ID =3), (select PizzaName
+    FROM Pizza
+    Where ID =3) , 3)
 
-i
+
 
 --SELECT *FROM PizzaIngredients 
 --SELECT * FROM UserAddress
@@ -227,12 +240,18 @@ i
 --select * from Orders
 --select * from OrderDetails
 ------insert into store ignreds---
-INSERT INTO StoreIngredients( StoreIngredientsAddressID, IngredientStock)
-Values((Select StoreAddressID from Store),250)
+INSERT INTO StoreIngredients
+  ( StoreIngredientsAddressID, IngredientStock)
+Values((Select StoreAddressID
+    from Store), 250)
 GO
 --insert into order and order  pizzaa--------
-INSERT INTO Orders(UserOrderAddressID, StoreAddressID) VALUES
-(1,1),(2,1),(3,1)
+INSERT INTO Orders
+  (UserOrderAddressID, StoreAddressID)
+VALUES
+  (1, 1),
+  (2, 1),
+  (3, 1)
 --isseus storing into order pizza may have key wrong, also reference fields wrong 
 --will get back to this if i can
 
