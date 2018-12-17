@@ -270,3 +270,18 @@ References Pizza(ID)
 
 alter table Orders
 add _orderId int Primary Key identity(1,1);
+
+ALTER TABLE OrderDetails
+Add Quantity int CHECK (Quantity >= 12)
+
+select *
+from OrderDetails
+
+alter table OrderDetails
+
+Alter table OrderDetails
+add constraint FK_Quantity
+foreign key
+(Quantity)
+References Pizza
+(ID)
