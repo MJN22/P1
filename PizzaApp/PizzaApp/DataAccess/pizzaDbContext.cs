@@ -28,8 +28,8 @@ namespace PizzaApp.DataAccess
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("server=tcp:noyes1811.database.windows.net,1433;User Id=martin;Password=20Dollars!;Database=pizzaDb;");
+                Console.WriteLine("not configured please config option builder");
+                //optionsBuilder.UseSqlServer(Configuration.GetConnectionString("Db"));
             }
         }
 
